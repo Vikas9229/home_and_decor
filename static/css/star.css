@@ -1,0 +1,201 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css";
+/* Hide Radio button */
+.rate > input{
+    display: none;
+  }
+  
+  .rate{
+    display: inline-block;;
+    border: 0;
+  }
+  
+  .rate > label{
+    float: right;
+  }
+  
+  /* Showing the stars */
+  .rate > label:before{
+    content: "\f005";
+    display: inline-block;
+    font-size: 1.1rem;
+    font-family:FontAwesome;
+    margin:0;
+    padding:0.3rem .2rem;
+    cursor: pointer;
+  }
+  
+  /* Half star */
+  .rate .half:before{
+    content: "\f089";
+    font-family:FontAwesome;
+    position: absolute;
+    padding-right: 0;
+  }
+  
+  /* Click and hover */
+  input:checked ~ label, label:hover ~ label{
+    color: #ffb503;
+  }
+  
+  /* hover hightlight */
+  input:checked + label:hover, input:checked ~ label:hover,input:checked ~ label:hover ~ label,
+  label:hover ~ input:checked ~ label{
+    color: #cc9000;
+  }
+  
+  .rating-star i{
+    color: #ffb503 !important;
+  }
+  
+  ul.thumb{
+    margin:0 auto;
+    padding: 0;
+    float: left;
+  }
+  ul.thumb li{
+    list-style: none;
+    margin: 10px;
+  }
+  ul.thumb li img{
+    width: 80px;
+    height: 80px;
+    border: 1px solid grey;
+  }
+  .banner-img{
+    height : 450px !important;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .card-img{
+    width: 100%;
+    height: 350px;
+    transition: 0.5s all ease-in-out;
+  }
+
+  .card-img:hover{
+    cursor: pointer; 
+  }
+
+  .nav-link:hover{
+    color: 	rgb(105,105,105) !important;
+    font-style: italic;
+    font-weight: 700;
+  }
+
+  .card-para:hover{
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .vastu-main{
+      width: 100%;
+      object-fit: cover;
+      object-position: center;
+  }
+
+  .main-sec1{
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .container-prof {
+    position: relative;
+    width: 100%;
+  }
+  
+  .image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: #008CBA;
+  }
+  
+  .container-prof:hover .overlay {
+    opacity: 1;
+  }
+  
+  .text {
+    color: white;
+    font-size: 20px;
+    /* position: absolute;
+    top: 50%;
+    left: 50%; */
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .decor_img{
+    width: 60%;
+    height: 70%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .decor_img_style{
+    border-radius: 18px;
+  }
+
+  .decor_img14_style{
+    height: 50% !important;
+  }
+
+  .img-fluid_img {
+    max-width: 100%;
+    height: 100%;
+}
+
+  .kns_div{
+    height: 72%;
+  }
+
+  /* .events_img{
+    height: 50% !important;
+  } */
+
+  .img34_div{
+    height: 72% !important;
+  }
+
+  .img34 {
+    max-width: 100%;
+    height: 100%;
+}
+
+  .img29_div{
+    height: 74%;
+  }
+
+  .content_1_style{
+    object-fit: cover;
+    width: 60%;
+    height: 50%;
+  }
+  @media (max-width:768px) {
+    .content_1_style{
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .new1_style{
+    max-width: 100%;
+    height: 19rem;
+    object-fit: cover;
+    object-position: center;
+  }

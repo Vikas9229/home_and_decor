@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- ============================ COMPONENT 1 ================================= -->
+    <div class="row row-cols-1 row-cols-lg-2">
+        <div class="col-12 col-md-6">
+            <article class="gallery-wrap">
+                <div class="img-big-wrap">
+                    <a href="#"><img src="{{single_product.images.url}}" class=""></a>
+                </div> <!-- img-big-wrap.// -->
+            </article> <!-- gallery-wrap .end// -->
+        </div>
+        <div class="col-12 col-md-6 border-left">
+            <article class="content-body">
+                <form method="POST" action="{% url 'add_cart' single_product.id %}">
+                    {% csrf_token %}
+
+                    <h2 class="title">{{single_product.product_name}}</h2>
+                    <hr>
+
+                    <div class="mb-3">
+                        <h5>Price</h5>
+                        <var class="price h4">₹{{single_product.price}}</var>
+                    </div>
+                    <h5>Description</h5>
+                    <p>{{single_product.description}}</p>
+
+
+                    {% comment %}
+                    <hr> {% endcomment %}
+                    {% comment %} <div class="row">
+                        <div class="item-option-select">
+                            <h6>Choose Color</h6>
+                            <select name="color" class="form-control">
+                                {% for i in single_product.variation_set.colors %}
+                                <option value={{i.variation_value}}>{{i.variation_value}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div> <!-- row.// --> {% endcomment %}
+                    {% comment %} <div class="row">
+                        <div class="item-option-select">
+                            <select name="size" class="form-control">
+                                {% for i in single_product.variation_set.sizes %}
+                                <option value={{i.variation_value}}>{{i.variation_value}}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                    </div> <!-- row.// --> {% endcomment %}
+                    <hr>
+                    {% if single_product.stock > 0 %}
+                    <button type="submit" class="btn  btn-dark"> <span class="text">Add to cart</span>
+                        <i class="fas fa-shopping-cart m-0"></i></button>
+                    {% else %}
+                    <h1 class="btn btn-danger">Out of Stock</h1>
+                    {% endif %}
+            </article>
+            </form> <!-- product-info-aside .// -->
+        </div> <!-- col.// -->
+    </div> <!-- row.// -->
+<!-- ============================ COMPONENT 1 END .// ================================= -->
+
+<br>
+
+<div class="">
+    <div class="">
+
+        <header class="section-heading">
+            <h3>Customer Reviews </h3>
+
+        </header>
+        <form method="POST" action="{% url 'submit_review' single_product.id %}">
+            {% csrf_token %}
+            <h5>Write Your Reviews</h5>
+            <div>
+                <label>How do you rate this products</label>
+                <br>
+                <div class="rate">
+                    <input type="radio" name="rating" id="rating10" value="5" required><label for="rating10"
+                        title="5"></label>
+                    <input type="radio" name="rating" id="rating9" value="4.5" required><label for="rating9"
+                        title="4.5"></label>
+                    <input type="radio" name="rating" id="rating8" value="4" required><label for="rating8"
+                        title="4"></label>
+                    <input type="radio" name="rating" id="rating7" value="3.5" required><label for="rating7"
+                        title="3.5"></label>
+                    <input type="radio" name="rating" id="rating6" value="3" required><label for="rating6"
+                        title="3"></label>
+                    <input type="radio" name="rating" id="rating5" value="2.5" required><label for="rating5"
+                        title="2.5"></label>
+                    <input type="radio" name="rating" id="rating4" value="2" required><label for="rating4"
+                        title="2"></label>
+                    <input type="radio" name="rating" id="rating3" value="1.5" required><label for="rating3"
+                        title="1.5"></label>
+                    <input type="radio" name="rating" id="rating2" value="1" required><label for="rating2"
+                        title="1"></label>
+                    <input type="radio" name="rating" id="rating1" value="0.5" required><label for="rating1"
+                        title="0.5"></label>
+                </div>
+            </div>
+            Review Title:
+            <input type="text" class="form-control" name="subject">
+            <br>
+
+            Review:
+            <textarea name="review" class="form-control" rows="5"></textarea><br><br>
+
+            <br>
+            <article class="box mb-3">
+                <div class="icontext w-100">
+                    <img src="{% static './images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle">
+                        <div class="title">
+                            <span class="date text-muted float-md-right">24.04.2020 </span>
+                            <h6 class="mb-1">{{user.first_name}}</h6>
+
+                        </div>
+                </div> <!-- icontext.// -->
+
+                <div class="mt-3">
+                    <p>
+                        Jawad is so smart !!!!
+                    </p>
+                </div>
+            </article><br>
+            {% if user.is_authenticated %}
+
+            <input type="submit" value="Submit Review" class="btn btn-dark">
+        </form>
+    </div> <!-- col.// -->
+    {% else %}
+    <p>You must be logged in to post a review. <span><a href="{% url 'login' %}">Login now</a></span></p>
+    {% endif %}
+
+
+
+
+</div> <!-- row.// -->
+
+
+{% endblock %}

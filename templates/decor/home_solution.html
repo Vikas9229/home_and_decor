@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h3 class="text-center my-3 font-weight-light">Home Security Solutions</h3>
+    <p class="text-center my-3 font-weight-bold">Use the latest in home security solutions from a wireless home alarm system to intrusion preventing electronic gadgets, to protect your home.</p>
+    <div class="row my-5">
+        <div class="col-md-6">
+            <div class="">
+                <div class="decor_img mx-auto">
+                    <a href="{% url 'img12_content' %}"><img src="{% static 'images/banners/img12.jpeg' %}" alt="" class="img-fluid decor_img_style"></a>
+                </div>
+                <div>
+                    <a href="{% url 'img12_content' %}"><h4 class="text-center my-2 text-dark">SECURE YOUR HOUSE WHILE YOU ARE AWAY!</h4></a>
+                    <p class="mt-4 text-muted pl-5 font-weight-light">3 MINS READ</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="">
+                <div class="decor_img mx-auto">
+                    <a href="{% url 'img13_content' %}"><img src="{% static 'images/banners/img13.jpg' %}" alt="" class="img-fluid decor_img_style"></a>
+                </div>
+                <div>
+                    <h4 class="text-center mt-5 text-dark">QUICK TIPS FOR HOME SECURITY</h4>
+                    <p class="mt-4 text-muted pl-5 font-weight-light">3 MINS READ</p>
+                </div>
+            </div>
+            
+        </div>
+        <hr>
+    </div>
+    <hr>
+    <!-- second row started -->
+    <div class="row my-4">
+        <div class="col-md-6">
+            <div class="">
+                <div class="decor_img mx-auto px-auto">
+                    <div class="px-5">
+                        <a href="{% url 'new1_content' %}"><img src="{% static 'images/banners/new1.jpg' %}" alt="" class="new1_style decor_img_style"></a>
+                    </div>
+                </div>
+                <div class="pt-4 mt-3">
+                    <h4 class="text-center my-2 text-dark">HOME SECURITY COMMON MISTAKES</h4>
+                    <p class="mt-4 text-muted pl-5 font-weight-light">3 MINS READ</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="">
+                <div class="decor_img mx-auto">
+                    <a href="{% url 'img11_content' %}"><img src="{% static 'images/banners/img11.jpg' %}" alt="" class="img-fluid decor_img_style"></a>
+                </div>
+
+            </div>
+            <div>
+                <h4 class="text-center my-2 text-dark">TAKE HELP OF LORD GANESHA IDOL TO DECORATE YOUR HOME</h4>
+                <p class="mt-4 text-muted pl-5 font-weight-light">3 MINS READ</p>
+            </div>
+        </div>
+        
+    </div><hr>
+    <!-- second row ended -->
+</div>
+{% endblock %}

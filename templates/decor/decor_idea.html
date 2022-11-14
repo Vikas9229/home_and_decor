@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container my-4">
+    <h3 class="text-center my-3 font-weight-light">Decor Ideas</h3>
+    <p class="text-center my-3 font-weight-bold">Convert your home into your dream house by using these simple inspirational<br> decor concepts from around the world and India.
+
+    </p>
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="">
+                <div class="decor_img mx-auto">
+                    <a href="{% url 'img8_content' %}"><img src="{% static 'images/banners/img8.jpg' %}" alt=""
+                            class="img-fluid decor_img_style"></a>
+                </div>
+                <div>
+                    <a href="{% url 'img8_content' %}">
+                        <h4 class="text-center my-2 text-dark">‘UP- CHIC, UP-URBAN, & UP-FUN’ DESIGN</h4>
+                    </a>
+                    <p class="mt-5 text-muted pl-5 font-weight-light">3 MINS READ</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="">
+                <div class="decor_img mx-auto">
+                    <a href="{% url 'img1_content' %}"><img src="{% static 'images/banners/img1.jpg' %}" alt=""
+                            class="img-fluid decor_img_style"></a>
+                </div>
+
+            </div>
+            <a>
+                <a href="{% url 'img1_content' %}"></a>
+                <h4 class="text-center my-2 text-dark">DECOR LESSONS FROM BOLLYWOOD’S PRODUCTION DESIGNER</h4>
+            </a>
+            <p class="text-muted pl-5 font-weight-light">2 MINS READ</p>
+        </div>
+
+    </div>
+
+
+
+    <hr>
+
+
+    <!-- second row -->
+
+    <div class="row my-4">
+        <div class="col-md-6">
+            <div class="">
+                <div class="decor_img mx-auto">
+                    <a href="{% url 'img10_content' %}"><img src="{% static 'images/banners/img10.jpg' %}" alt="" class="img-fluid decor_img_style"></a>
+                </div>
+                <div>
+                    <a href="{% url 'img10_content' %}"><h4 class="text-center my-2 text-dark">MINIMALIST DECOR FOR CALM MINDS</h4></a>
+                    <p class="mt-5 text-muted pl-5 font-weight-light">3 MINS READ</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="">
+                <div class="decor_img mx-auto">
+                    <a href="{% url 'img3_content' %}"><img src="{% static 'images/banners/img3.jpeg' %}" alt="" class="img-fluid decor_img_style"></a>
+                </div>
+
+            </div>
+            <div>
+                <a href="{% url 'img3_content' %}"><h4 class="text-center my-2 text-dark">CHANDELIERS THAT MATCH YOUR HOME AND PERSONALITY</h4></a>
+                <p class="mt-4 text-muted pl-5 font-weight-light">3 MINS READ</p>
+            </div>
+        </div>
+
+    </div>
+    <hr>
+
+    <!-- second row ends -->
+
+
+    <!-- Third row start -->
+    <div class="row my-4">
+        <div class="col-md-6">
+            <div class="">
+                <div class="decor_img mx-auto">
+                    <a href="{% url 'imgdecor_content' %}"><img src="{% static 'images/banners/img2.jpg' %}" alt="" class="img-fluid decor_img_style"></a>
+                </div>
+                <div>
+                    <h4 class="text-center my-2 text-dark">SKYLIGHT- PROVIDE YOUR HOME DAYLIGHT AND VENTILATION</h4>
+                    <p class="mt-4 text-muted pl-5 font-weight-light">3 MINS READ</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="">
+                <div class="decor_img mx-auto">
+                    <a href="{% url 'img11_content' %}"><img src="{% static 'images/banners/img11.jpg' %}" alt="" class="img-fluid decor_img_style"></a>
+                </div>
+
+            </div>
+            <div>
+                <h4 class="text-center my-2 text-dark">TAKE HELP OF LORD GANESHA IDOL TO DECORATE YOUR HOME</h4>
+                <p class="mt-4 text-muted pl-5 font-weight-light">3 MINS READ</p>
+            </div>
+        </div>
+
+    </div>
+    <!-- Third row ends -->
+</div>
+
+{% endblock %}

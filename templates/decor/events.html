@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container my-4">
+    <h2 class="text-center font-weight-normal">Events</h2>
+    <p class="text-center text-dark">Event updates from across the home decor segment in India and abroad.</p>
+    <div class="row my-5">
+        <div class="col-md-6">
+            <div class="">
+                <div class="decor_img mx-auto">
+                    <a href="{% url 'img26_content' %}"><img src="{% static 'images/banners/img26.jpg' %}" alt="" class="img-fluid decor_img_style"></a>
+                </div>
+                <div>
+                    <a href="{% url 'img26_content' %}"><h4 class="text-center my-2 text-dark">CONNECTIONS, THE PUNE DESIGN FESTIVAL 2015</h4></a>
+                    <p class="mt-5 text-muted font-weight-light">3 MINS READ</p>
+   
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="">
+                <div class="decor_img mx-auto py-4">
+                    <a href="{% url 'img27_content' %}"><img src="{% static 'images/banners/img27.jpg' %}" alt="" class="decor_img_style img-fluid_img "></a>
+                </div>
+
+            </div>
+            <div>
+                <a href="{% url 'img27_content' %}"><h4 class="text-center my-4 text-dark">ASIAN PAINT’S MAGNIFICENT STROKE OF COLORS – COLOR NEXT</h4></a>
+                <p class="text-muted font-weight-light">3 MINS READ</p>
+   
+            </div>
+
+        </div>
+
+
+    </div>
+    <hr>
+
+
+    <div class="row my-4">
+        <div class="col-md-6">
+            <div class="">
+                <div class="decor_img mx-auto">
+                    <a href="{% url 'img28_content' %}"><img src="{% static 'images/banners/img28.jpg' %}" alt="" class="img-fluid decor_img_style"></a>
+                </div>
+                <div>
+                    <a href="{% url 'img28_content' %}"><h4 class="text-center my-2 text-dark">INDIA ART SUMMIT 2011 (DELHI) – REVOLT AGE</h4></a>
+                    <p class="text-muted font-weight-light">3 MINS READ</p>
+   
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+</div>
+{% endblock %}
