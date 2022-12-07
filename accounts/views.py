@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .forms import RegistrationForm,UserProfileForm,UserForm
-from .models import Account,UserProfile
+from .forms import RegistrationForm,UserProfileForm,UserForm,DesignerForm
+from .models import Account,UserProfile,Designer
 from django.contrib import messages,auth
 from carts.models import CartItem,Cart
 from orders.models import Order
@@ -13,6 +13,25 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import login_required
+
+
+from http.client import HTTPResponse
+from rest_framework.response import Response
+from django.shortcuts import render,redirect
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login,logout
+from rest_framework.authtoken.models import Token
+import rest_framework.status as status
+from rest_framework.decorators import api_view
+from django.views.decorators.csrf import csrf_exempt 
+import requests
+from datetime import datetime
+from django.conf import settings
+from django.contrib import messages
+from employee.models import CustomUser as User
+from django.urls import reverse
+
+from employee.serializer import UserSerializer
 
 # Create your views here.
 def register(request):
@@ -50,6 +69,45 @@ def register(request):
     }
 
     return render(request,'accounts/register.html',context)
+
+def designer(request):
+    if request.method=="POST":
+        form=DesignerForm(request.POST)
+        print(form)
+        # if form.is_valid():
+        first_name=form.cleaned_data['first_name']
+        last_name=form.cleaned_data['last_name']
+        email=form.cleaned_data['email']
+        password=form.cleaned_data['password']
+        phone_number=form.cleaned_data['phone_number']
+        username=email.split("@")[0]
+        user=Account.objects.create_user(first_name=first_name,last_name=last_name,email=email,password=password,username=username)
+        user.is_architect = False
+        user.phone_number=phone_number
+        user.save()
+        current_user = Account.objects.get(id=user.id)
+        designer_user = Designer(user=current_user).save()
+        messages.success(request,"Registration successful... we have sent an email please check your email id ")
+        current_site=get_current_site(request)
+        mail_subject="Please activate your account"
+        message=render_to_string('accounts/account_verification_email.html',{
+            'user':user,
+            'domain':current_site,
+            'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+            'token':default_token_generator.make_token(user),
+        })
+        to_email=email
+        send_email=EmailMessage(mail_subject,message,to=[to_email])
+        send_email.send()
+        return redirect('login')
+    else:
+    
+        form=DesignerForm()       
+    context={
+         'form':form,    
+    }
+
+    return render(request,'accounts/designer.html',context)
 
 def login(request):
     if request.method=='POST':
@@ -239,3 +297,101 @@ def change_password(request):
             messages.error(request,'password do not mach')
             return redirect('change_password')
     return render(request,'accounts/change_password.html')
+
+
+def loginViewForHtml(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request,username=username,password=password)
+        if user is not None:
+            auth_login(request,user)
+            token = Token.objects.get(user__username = username)
+            user_data = User.objects.get(username=username)
+            data = {'name':user_data.get_full_name(),'token':token.key,'id':user_data.id}
+            return redirect('home')
+        return Response(data='Invalid data')
+    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['GET'])
+def logoutView(request):
+    logout(request)
+    return Response(data="Successfully Logout!!")
+
+
+def google_login(request):
+    redirect_uri = "%s://%s%s" % (
+        request.scheme, request.get_host(), reverse('google_login')
+    )
+    if('code' in request.GET):
+        params = {
+            'grant_type': 'authorization_code',
+            'code': request.GET.get('code'),
+            'redirect_uri': redirect_uri,
+            'client_id': settings.GP_CLIENT_ID,
+            'client_secret': settings.GP_CLIENT_SECRET
+        }
+        url = 'https://accounts.google.com/o/oauth2/token'
+        response = requests.post(url, data=params)
+        url = 'https://www.googleapis.com/oauth2/v1/userinfo'
+        access_token = response.json().get('access_token')
+        response = requests.get(url, params={'access_token': access_token})
+        user_data = response.json()
+        email = user_data.get('email')
+        if email:
+            user, _ = User.objects.get_or_create(email=email, username=email)
+            gender = user_data.get('gender', '').lower()
+            if gender == 'male':
+                gender = 'M'
+            elif gender == 'female':
+                gender = 'F'
+            else:
+                gender = 'O'
+            data = {
+                'first_name': user_data.get('name', '').split()[0],
+                'last_name': user_data.get('family_name'),
+                'google_avatar': user_data.get('picture'),
+                'gender': gender,
+                'is_active': True
+            }
+            user.__dict__.update(data)
+            user.save()
+            user.backend = settings.AUTHENTICATION_BACKENDS[0]
+            auth_login(request, user)
+            return render(request,'home.html')
+        else:
+            messages.error(
+                request,
+                'Unable to login with Gmail Please try again'
+            )
+        return redirect('/')
+    else:
+        url = "https://accounts.google.com/o/oauth2/auth?client_id=%s&response_type=code&scope=%s&redirect_uri=%s&state=google"
+        scope = [
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/userinfo.email"
+        ]
+        scope = " ".join(scope)
+        url = url % (settings.GP_CLIENT_ID, scope, redirect_uri)
+        return redirect(url)
+
+def loginpage(request):
+    return render(request,'login.html')
+def Signuppage(request):
+    return render(request,'register.html')
+
+
+def SignupapiForHtml(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        first_name = request.POST.get('f_name')
+        last_name = request.POST.get('l_name')
+        password = request.POST.get('password')
+        user = User.objects.create_user(username=username,email=email,password=password,first_name=first_name,last_name=last_name)
+        user.save()
+        userdata = User.objects.get(username=username)
+        user_ser = UserSerializer(userdata).data
+        return redirect('login-page')
+    

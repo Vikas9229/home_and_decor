@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load socialaccount %}
 <section class="section-conten padding-y" style="min-height:84vh">
 
     <!-- ============================ COMPONENT LOGIN   ================================= -->
@@ -22,13 +23,24 @@
               </div> <!-- form-group form-check .// -->
               <div class="form-group">
                   <button type="submit" class="btn btn-dark btn-block"> Login  </button>
-              </div> <!-- form-group// -->    
+              </div> <!-- form-group// -->  
+                
           </form>
+          <div class="my-3">
+            <p class="btn btn-dark btn-block"><a href="{% provider_login_url 'google' %}"><span class="text-white px-2"><i class="fab fa-google"></i></span><span class="px-2 text-white">Login With Google</span></a></p>
+            
+          </div>
+          <div>
+            <p class="btn btn-dark btn-block"><a href="{% url 'social:begin' 'facebook' %}"><i class="fab fa-facebook-square"></i><span class="px-2 text-white">Login With Facebook</span></a></p>
+          </div>
           </div> <!-- card-body.// -->
+          
         </div> <!-- card .// -->
     
-         <p class="text-center mt-4">Don't have account? <a href="{% url 'register' %}">Sign up</a></p>
-         <br><br>
+         
+        
+        <!-- <p><a class="btn btn-outline-info w-100 mb-3" href="{% url 'social:begin' 'facebook' %}"><i class="fi-facebook fs-lg me-1"></i>Sign in with Facebook</a></p>
+         <br><br> -->
     <!-- ============================ COMPONENT LOGIN  END.// ================================= -->
     
     

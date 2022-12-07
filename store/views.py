@@ -1,14 +1,86 @@
-from django.shortcuts import render,redirect
-from .models import Product
+from django.shortcuts import render,redirect,HttpResponse
+from .models import Product,Architects
 from category.models import Category
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.contrib import messages
 from .models import ReviewRating
-from .forms import ReviewForm
+from .forms import ReviewForm,ArchitectsForm
+from django.core.mail import send_mail
 
 
 # Create your views here.
+
+def architects(request):
+    # if request.method=="POST":
+    #     pname=request.POST.get('pname')
+    #     img=request.POST.get('img')
+    #     descrp=request.POST.get('descrp')
+    #     office=request.POST.get('office')
+    #     email=request.POST.get('email')
+    #     Product(product_name=pname,images=img,description=descrp,offi).save()
+    architect=Architects.objects.all()
+    print(architect)
+
+
+    context={
+        'architect':architect,
+    }
+       
+       
+    return render(request,'store/architects.html',context)
+
+
+
+def architect_upload(request):
+    if request.method == "POST":
+        user=request.user
+        # cname=request.POST['cname']
+        # description=request.POST['desc']
+        # address=request.POST['addr']
+        # email=request.POST['email']
+        # image=request.POST['image']
+        # architect=Architects(company_name=cname,images=image,descript=description,email=email,office_add=address,user=user)
+        # architect.save()
+        form=ArchitectsForm(request.POST,  request.FILES)
+        if form.is_valid():
+            form.save()
+        else:
+            return HttpResponse(form.errors)
+        
+    return render(request,'store/architect_upload.html')
+
+def architect_profile(request):
+    profile=Architects.objects.filter(user=request.user)
+    print(profile)
+    context={
+        'profile':profile
+    }
+    return render(request,'store/architects.html',context)
+
+def contact(request):
+    if request.method == "POST":
+        message_name = request.POST['message_name']
+        message_email = request.POST['message_email']
+        message_number = request.POST['message_number']
+        message_address = request.POST['message_address']
+        message = request.POST['message']
+
+        # send mail
+        send_mail(
+            'Inquiry from Customer',
+            'message_name , message',
+            'message_email',
+            [request.user.email],
+            fail_silently=False,
+        )
+        print
+
+        return render(request,'store/contact.html')
+
+    else:
+        return render(request,'store/contact.html')
+
 def store(request,category_slug=None):
     if category_slug!=None:
         categories=Category.objects.get(slug=category_slug)

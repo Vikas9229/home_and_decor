@@ -36,7 +36,6 @@ class MyAccountManager(BaseUserManager):
         user.is_superadmin=True
         user.save(using=self._db)
         return user
-    
 
 
 class Account(AbstractBaseUser):
@@ -53,6 +52,8 @@ class Account(AbstractBaseUser):
     is_staff=models.BooleanField(default=False)
     is_active=models.BooleanField(default=False)
     is_superadmin=models.BooleanField(default=False)
+    is_customer=models.BooleanField(default=False)
+    # is_designer=models.BooleanField(default=False)
 
     USERNAME_FIELD='email'
     REQUIRED_FIELDS=['username','first_name','last_name']
@@ -65,8 +66,16 @@ class Account(AbstractBaseUser):
     def has_perm(self,perm,obj=None):
         return self.is_admin
     def __str__(self):
-        return self.email
-    
+        return self.username
+
+
+class Designer(models.Model):
+    user=models.OneToOneField(Account,on_delete=models.CASCADE,primary_key=True)
+
+
+
+
+
 class UserProfile(models.Model):
     # user=models.ForeignKey(Account,on_delete=models.CASCADE)
     users = models.ForeignKey('Account',on_delete=models.CASCADE,null=True,blank=True)
@@ -81,3 +90,5 @@ class UserProfile(models.Model):
     
     # def full_address(self):
     #     return f'{self.address_line_1} {self.address_line_2}'
+
+

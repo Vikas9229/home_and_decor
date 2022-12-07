@@ -37,3 +37,16 @@ class ReviewRating(models.Model):
 
     def __str__(self):
         return self.subject
+
+
+class Architects(models.Model):
+    user=models.ForeignKey(Account,on_delete=models.CASCADE,null=True,blank=True)
+    company_name=models.CharField(max_length=100)
+    images=models.ImageField()
+    descript=models.TextField(max_length=1000)
+    email=models.EmailField()
+    office_add=models.TextField(max_length=1000)
+    
+    def __str__(self):
+        return self.company_name
+

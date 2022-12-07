@@ -7,6 +7,7 @@ from carts.views import _cart_id
 from .models import Order,OrderProduct,Payment
 import datetime
 import json
+from .import views
 from django.template.loader import render_to_string
 # Create your views here.
 @login_required(login_url='login')
@@ -86,6 +87,57 @@ def place_order(request,total=0,quantity=0):
         return render(request,'orders/payments.html',context)
     else:
         return redirect('checkout')
+
+
+def razorpay(request,id):
+    import razorpay
+    order_details = Order.objects.get(id=id)
+    client = razorpay.Client(auth=("rzp_test_B9st9Hrr0Tp8ZA", "Ve68z22EhYIf3jOBrBo3o8Th"))
+    data = { "amount": int(order_details.order_total)*100, "currency": "INR", "receipt": "Itinerary Buddy" }
+    payment_amount=data["amount"]
+    payment = client.order.create(data=data)
+    razorpay_order_ID = payment['id']
+    amount = data.get('amount')
+    name = {order_details.email}
+
+    payment  = Payment(
+    user=request.user,
+    payment_id=razorpay_order_ID,
+    amount_paid=order_details.order_total,
+    status=True,
+    created_at=datetime.datetime.now
+    )
+    payment.save()
+
+    order=Order.objects.get(user=request.user,is_ordered=False,id=order_details.id)
+    order.payment=payment
+    order.save()
+
+    cart_items=CartItem.objects.filter(user=request.user)
+   
+    for item in cart_items:
+        orderproduct=OrderProduct()
+        orderproduct.order_id=order.id
+        orderproduct.payment=payment
+        orderproduct.user_id=request.user.id
+        orderproduct.product_id=item.product_id
+        orderproduct.product_price=item.product.price
+        orderproduct.ordered=True
+        orderproduct.save()
+
+        orderproduct=OrderProduct.objects.get(id=orderproduct.id)
+        orderproduct.save()
+    context = {'amount':amount,'name':name,'razorpay_order_ID':razorpay_order_ID,'order_details':order_details}
+    return render(request,"accounts/razorpay.html",context)
+
+def paymentdone(request,id):
+    CartItem.objects.filter(user=request.user).delete()
+    order=Order.objects.filter(id=id).update(is_ordered=True)
+    return render(request,'orders/order_complete.html')
+
+
+
+
     
 # def payments(request):
 #     body=json.loads(request.body)
@@ -171,67 +223,71 @@ def place_order(request,total=0,quantity=0):
 #     except (Payment.DoesNotExist,Order.DoesNotExist):
 #         return redirect('home')
 
-def razorpay(request,id):
+
+
+# def razorpay(request,id):
     
-   import razorpay
-   
+#    import razorpay
+#    order_details = Order.objects.get(id=id)
+#    print(order_details)
+#    client = razorpay.Client(auth=("rzp_test_B9st9Hrr0Tp8ZA", "Ve68z22EhYIf3jOBrBo3o8Th"))
 
-   order_details = Order.objects.get(id=id)
-   print(order_details)
-   client = razorpay.Client(auth=("rzp_test_B9st9Hrr0Tp8ZA", "Ve68z22EhYIf3jOBrBo3o8Th"))
+#    data = { "amount": int(order_details.order_total) * 100, "currency": "INR", "receipt": "" }
+#    print(data)
+#    payment_amount=data["amount"]
+#    payment = client.order.create(data=data)
+#    razorpay_order_ID = payment['id']
+#    amount = (data.get('amount'))
+#    print(amount)
+#    name = {order_details.email}
+#    context = {'amount':amount,'name':name,'razorpay_order_ID':razorpay_order_ID,'order_details':order_details}
 
-   data = { "amount": int(order_details.order_total) * 100, "currency": "INR", "receipt": "" }
-   print(data)
-   payment_amount=data["amount"]
-   payment = client.order.create(data=data)
-   razorpay_order_ID = payment['id']
-   amount = (data.get('amount'))
-   print(amount)
-   name = {order_details.email}
-   context = {'amount':amount,'name':name,'razorpay_order_ID':razorpay_order_ID,'order_details':order_details}
+#    payment_db  = Payment(user=request.user,payment_id=razorpay_order_ID,amount_paid=order_details.order_total,status=True,created_at=datetime.datetime.now)
+#    payment_db.save()
+#    order=Order.objects.get(user=request.user,is_ordered=False,id=order_details.id)
+#    order.payment=payment_db
+#    order.save()
+#    cart_items=CartItem.objects.filter(user=request.user)
+#    for item in cart_items:
+#         orderproduct=OrderProduct()
+#         orderproduct.order_id=order.id
+#         orderproduct.payment=payment_db
+#         orderproduct.user_id=request.user.id
+#         orderproduct.product_id=item.product_id
+#         orderproduct.product_price=item.product.price
+#         orderproduct.ordered=True
+#         orderproduct.save() 
+#         cart_item=CartItem.objects.get(id=item.id)
+#         orderproduct=OrderProduct.objects.get(id=orderproduct.id)
+#         orderproduct.save()
+#         cart_data = CartItem.objects.filter(user=request.user).delete()
 
-   payment_db  = Payment(user=request.user,payment_id=razorpay_order_ID,amount_paid=order_details.order_total,status=True,created_at=datetime.datetime.now)
-   payment_db.save()
-   order=Order.objects.get(user=request.user,is_ordered=False,id=order_details.id)
-   order.payment=payment_db
-   order.save()
-   cart_items=CartItem.objects.filter(user=request.user)
-   for item in cart_items:
-        orderproduct=OrderProduct()
-        orderproduct.order_id=order.id
-        orderproduct.payment=payment_db
-        orderproduct.user_id=request.user.id
-        orderproduct.product_id=item.product_id
-        orderproduct.product_price=item.product.price
-        orderproduct.ordered=True
-        orderproduct.save()
-        cart_item=CartItem.objects.get(id=item.id)
-        orderproduct=OrderProduct.objects.get(id=orderproduct.id)
-        orderproduct.save()
-        cart_data = CartItem.objects.filter(user=request.user).delete()
-        return render(request,"accounts/razorpay.html",context)
+#         return render(request,"accounts/razorpay.html",context)
 
-def paymentdone(request,id):
-    # order_number=request.GET.get('id=order_number')
-    # transID=request.GET.get('payment_id')
-    # try:
-    #     order=Order.objects.get(order_number=order_number,is_ordered=True)
-    #     ordered_products=OrderProduct.objects.filter(order_id=order.id)
 
-    #     subtotal=0
-    #     for i in ordered_products:
-    #         subtotal=subtotal+i.product_price*i.quantity
-    #     payment=Payment.objects.get(payment_id=transID)
-    #     context={
-            
-    #         'order':order,
-    #         'ordered_products':ordered_products,
-    #         'order_number':order.order_number,
-    #         'transID':payment.payment_id,
-    #         'payment':payment,
-    #         'subtotal':subtotal,
+# def paymentdone(request,id):
+#     try:
+#         order_number=request.GET.get(id)
+#         transID=request.GET.get(id)
+#         print(order_number)
+#         print(transID)
+#         order=Order.objects.get(order_number=order_number,is_ordered=True)
+#         ordered_products=OrderProduct.objects.filter(order_id=order.id)
 
-    #     }
-        return render(request,'orders/order_complete.html')
-    # except (Payment.DoesNotExist,Order.DoesNotExist):
-    #     return redirect('home')
+#         subtotal=0
+#         for i in ordered_products:
+#             subtotal=subtotal+i.product_price*i.quantity
+#             payment=Payment.objects.get(payment_id=transID)
+#         context={
+                
+#             'order':order,
+#             'ordered_products':ordered_products,
+#             'order_number':order.order_id,
+#             'transID':payment.payment_id,
+#             'payment':payment,
+#             'subtotal':subtotal,
+
+#         }
+#         return render(request,'orders/order_complete.html',context)
+#     except (Payment.DoesNotExist,Order.DoesNotExist):
+#         return redirect('home')

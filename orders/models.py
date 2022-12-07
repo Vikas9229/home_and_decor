@@ -8,7 +8,7 @@ class Payment(models.Model):
     user=models.ForeignKey(Account,on_delete=models.CASCADE)
     payment_id=models.CharField(max_length=100,default=True)
     amount_paid=models.CharField(max_length=100)
-    status=models.CharField(max_length=100)
+    status=models.BooleanField()
     created_at=models.DateTimeField(auto_now_add=True)
     payment_method=models.CharField(max_length=100,blank=True, null=True)
 

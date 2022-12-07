@@ -43,6 +43,18 @@ INSTALLED_APPS = [
     'category',
     'carts',
     'orders',
+    'employee',
+
+    'social_django',  # <-- Here social-auth-app-django
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
 ]
 
 MIDDLEWARE = [
@@ -53,9 +65,43 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware', # <-- Here
 ]
 
 ROOT_URLCONF = 'ecommerce.urls'
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+
+    'social_core.backends.facebook.FacebookOAuth2',
+    
+]
+
+GP_CLIENT_ID = '1023207072758-vpjbbf6i9ol9omkbq1npuj0iiov8mu0m.apps.googleusercontent.com'
+GP_CLIENT_SECRET = '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'
+
+SOCIAL_AUTH_FACEBOOK_KEY = '489572255997385'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = 'fd9dc0e77a0a6cecf29aea9ad4d71528'  # App Secret
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+SITE_ID = 2
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
 
 TEMPLATES = [
     {
@@ -70,6 +116,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'category.context_processors.menu_links',
                 'carts.context_processors.counter',
+                'social_django.context_processors.backends',  # <-- Here
+                'social_django.context_processors.login_redirect', # <-- Here
             ],
         },
     },
@@ -78,6 +126,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 AUTH_USER_MODEL="accounts.Account"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'employeeapp.serializers.UserSerializer',
+}
 
 
 # Database
